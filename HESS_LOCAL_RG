@@ -1,0 +1,275 @@
+#!/bin/nohup bash
+
+################################################
+### Note this script will call the HESS wrapper function
+### Be sure to have this script and the HESS wrapper script in the same location
+################################################
+
+################################################
+### Add Parsers
+
+    while [ "$1" != "" ];do
+    PARAM=`echo $1 | awk -F= '{print $1}'`
+    VALUE=`echo $1 | awk -F= '{print $2}'`
+    case $PARAM in
+            -h | --help)
+                    helpscript
+                    exit 1
+                    ;;
+            --hesswrapperloc)
+                    hesswrapperloc=$VALUE
+                    ;;
+            --sumstats1)
+                    sumstats1=$VALUE 
+                    ;;
+            --sumstats2)
+                    sumstats2=$VALUE
+                    ;;
+            --prefix1)
+                    prefix1=$VALUE 
+                    ;;
+            --prefix2)
+                    prefix2=$VALUE 
+                    ;;
+            --sum1snpcol)
+                    sum1snpcol=$VALUE
+                    ;;
+            --sum1bpcol)   
+                    sum1bpcol=$VALUE 
+                    ;;
+            --sum1chrcol)
+                    sum1chrcol=$VALUE 
+                    ;;
+            --sum1a1col)
+                    sum1a1col=$VALUE 
+                    ;;
+            --sum1a2col)
+                    sum1a2col=$VALUE 
+                    ;;
+            --sum1zcol)
+                    sum1zcol=$VALUE
+                    ;;
+            --sum1pcol)
+                    sum1pcol=$VALUE 
+                    ;;
+            --sum1traittype)
+                    sum1traittype=$VALUE
+                    ;;
+            --sum1ncasecol)
+                    sum1ncasecol=$VALUE
+                    ;;
+            --sum1nconcol)
+                    sum1nconcol=$VALUE
+                    ;;
+            --sum1ncol)
+                    sum1ncol=$VALUE
+                    ;;
+            --sum2snpcol)
+                    sum2snpcol=$VALUE
+                    ;;
+            --sum2bpcol)   
+                    sum2bpcol=$VALUE 
+                    ;;
+            --sum2chrcol)
+                    sum2chrcol=$VALUE 
+                    ;;
+            --sum2a1col)
+                    sum2a1col=$VALUE 
+                    ;;
+            --sum2a2col)
+                    sum2a2col=$VALUE 
+                    ;;
+            --sum2zcol)
+                    sum2zcol=$VALUE
+                    ;;
+            --sum2pcol)
+                    sum2pcol=$VALUE 
+                    ;;
+            --sum2traittype)
+                    sum2traittype=$VALUE
+                    ;;
+            --sum2ncasecol)
+                    sum2ncasecol=$VALUE
+                    ;;
+            --sum2nconcol)
+                    sum2nconcol=$VALUE
+                    ;;
+            --sum2ncol)
+                    sum2ncol=$VALUE
+                    ;;
+            --output)
+                    output=$VALUE
+                    ;;
+            --path2hess)
+                    path2hess=$VALUE
+                    ;;
+            --hess_env)
+                    hess_env=$VALUE
+                    ;;
+            --path2ldsc)
+                    path2ldsc=$VALUE
+                    ;;
+            --ldsc_env)
+                    ldsc_env=$VALUE
+                    ;;
+            --path2ldscores)
+                    path2ldscores=$VALUE
+                    ;;
+            --bfile_dir)
+                    bfile_dir=$VALUE
+                    ;;
+            --partition_dir)
+                    partition_dir=$VALUE
+                    ;;
+            --localout)
+                    localout=$VALUE 
+                    ;;
+            --hessstep)
+                    hessstep=$VALUE
+                    ;;
+            $)
+                    echo "ERROR:unknown parameter \ "$PARAM\ ""
+                    helpscript
+            esac
+            shift
+    done
+################################################
+
+################################################
+### Perform HESS analysis
+
+    # Generate script when both phenotypes are quantitaitve traits 
+
+        if [[ "$sum1traittype" == "Quantitative" && "$sum2traittype" == "Quantitative" ]]; then 
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 --sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=input &
+            " > $localout/$output.input.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1a &
+            " > $localout/$output.1a.step.sh
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1b &
+            " > $localout/$output.1b.step.sh
+            
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1c & 
+            " > $localout/$output.1c.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1d &
+            " > $localout/$output.1d.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=2 &
+            " > $localout/$output.2.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=3 &
+            " > $localout/$output.3.step.sh
+
+        fi 
+    #>>>>
+
+    # Generate scripts if sum1 is binary and sum2 is quantitative 
+
+        if [[ "$sum1traittype" == "Binary" && "$sum2traittype" == "Quantitative" ]]; then 
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 --sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=input &
+            " > $localout/$output.input.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1a &
+            " > $localout/$output.1a.step.sh
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1b &
+            " > $localout/$output.1b.step.sh
+            
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1c & 
+            " > $localout/$output.1c.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1d &
+            " > $localout/$output.1d.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=2 &
+            " > $localout/$output.2.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1ncasecol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncol=$sum2ncol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=3 &
+            " > $localout/$output.3.step.sh
+        fi 
+    #>>>>> 
+
+    # Generate scripts if sum1 is quantitative and sum2 is binary 
+        
+        if [[ "$sum1traittype" == "Quantitative" && "$sum2traittype" == "Binary" ]]; then 
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 --sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=input &
+            " > $localout/$output.input.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1a &
+            " > $localout/$output.1a.step.sh
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1b &
+            " > $localout/$output.1b.step.sh
+            
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1c & 
+            " > $localout/$output.1c.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1d &
+            " > $localout/$output.1d.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=2 &
+            " > $localout/$output.2.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncol=$sum1ncol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=3 &
+            " > $localout/$output.3.step.sh 
+        
+        fi 
+    # >>>>> 
+
+    # Generate if both phenotypes are binary 
+        if [[ "$sum1traittype" == "Binary" && "$sum2traittype" == "Binary" ]]; then 
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 --sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=input &
+            " > $localout/$output.input.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1a &
+            " > $localout/$output.1a.step.sh
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1b &
+            " > $localout/$output.1b.step.sh
+            
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1c & 
+            " > $localout/$output.1c.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=1d &
+            " > $localout/$output.1d.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=2 &
+            " > $localout/$output.2.step.sh
+
+            echo "
+                nohup bash $hesswrapperloc/HESS_wrapper_.sh --sumstats1=$sumstats1 --sumstats2=$sumstats2 --prefix1=$prefix1 --prefix2=$prefix2 -sum1traittype=$sum1traittype --sum1snpcol=$sum1snpcol --sum1bpcol=$sum1bpcol --sum1chrcol=$sum1chrcol --sum1a1col=$sum1a1col --sum1a2col=$sum1a2col --sum1zcol=$sum1zcol --sum1pcol=$sum1pcol --sum1ncasecol=$sum1ncasecol --sum1nconcol=$sum1nconcol --sum2traittype=$sum2traittype --sum2snpcol=$sum2snpcol --sum2bpcol=$sum2bpcol --sum2chrcol=$sum2chrcol --sum2a1col=$sum2a1col --sum2a2col=$sum2a2col   --sum2zcol=$sum2zcol --sum2pcol=$sum2pcol --sum2ncasecol=$sum2ncasecol --sum2nconcol=$sum2nconcol --output=$output --path2hess=$path2hess --hess_env=$hess_env --path2ldsc=$path2ldsc --ldsc_env=$ldsc_env --path2ldscores=$path2ldscores --bfile_dir=$bfile_dir --partition_dir=$partition_dir --localout=$localout --hessstep=3 &
+            " > $localout/$output.3.step.sh 
+        fi 
+    # >>>>> 
+
+
+################################################
