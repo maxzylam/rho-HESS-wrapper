@@ -38,7 +38,7 @@ In the current repository, there are two files that make up the rho-HESS wrapper
 --sum1nconcol : numeric variable - which column indicate control sample size?
 --sum1ncol : numeric variable - which column indicate total sample size (Quantitative or only Neff available)
 
-# The following ooptions is applicable to GWAS summary statistics 2
+# The following options is applicable to GWAS summary statistics 2
 --sum2snpcol
 --sum2bpcol   
 --sum2chrcol
